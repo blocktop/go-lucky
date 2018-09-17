@@ -17,7 +17,7 @@
 package main
 
 import (
-	"github.com/blocktop/go-lucky-cli/cmd"
+	"github.com/blocktop/go-lucky/cmd"
 )
 
 func main() {
