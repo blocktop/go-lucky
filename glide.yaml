@@ -1,0 +1,25 @@
+package: github.com/blocktop/go-lucky-cli
+import:
+- package: github.com/blocktop/go-blockchain
+- package: github.com/blocktop/go-consensus
+- package: github.com/blocktop/go-controller
+- package: github.com/blocktop/go-dashboard
+- package: github.com/blocktop/go-luckyblock
+- package: github.com/blocktop/go-network-libp2p
+- package: github.com/blocktop/go-rpc-client
+  subpackages:
+  - consensus
+- package: github.com/blocktop/go-rpc-server
+- package: github.com/blocktop/go-spec
+- package: github.com/golang/glog
+- package: github.com/libp2p/go-libp2p-crypto
+  version: v2.0.1
+- package: github.com/libp2p/go-libp2p-peer
+  version: v2.3.7
+- package: github.com/mitchellh/go-homedir
+  version: v1.0.0
+- package: github.com/spf13/cobra
+  version: v0.0.3
+- package: github.com/spf13/viper
+  version: v1.2.0
+- package: github.com/multiformats/go-multiaddr
