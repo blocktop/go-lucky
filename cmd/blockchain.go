@@ -83,7 +83,6 @@ var blockchainCmd = &cobra.Command{
 		}
 
 		node.Listen(ctx)
-		consensus.Start(ctx)
 		controller.Start(ctx)
 		rpc.Start()
 
@@ -135,6 +134,8 @@ more than once`)
 	viper.SetDefault("blockchain.type", "luckychain")
 	viper.SetDefault("blockchain.block.type", "luckyblock")
 	viper.SetDefault("blockchain.block.version", "v1")
+	viper.SetDefault("blockchain.consensus.depth", 10)
+	viper.SetDefault("blockchain.consensus.depthBuffer", 2)
 
 	viper.SetDefault("node.bootstrapper.disable", false)
 	viper.SetDefault("node.bootstrapper.checkInterval", 5)         // seconds
