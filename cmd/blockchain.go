@@ -161,10 +161,6 @@ func buildController(node spec.NetworkNode, consensus spec.Consensus) spec.Contr
 	blockGenerator := luckyblock.NewBlockGenerator(node.GetPeerID())
 	bc := blockchain.NewBlockchain(blockGenerator, consensus, node.GetPeerID())
 
-	if viper.GetBool("blockchain.genesis") {
-		bc.ProduceGenesisBlock()
-	}
-
 	controller.AddBlockchain(bc)
 
 	return controller
