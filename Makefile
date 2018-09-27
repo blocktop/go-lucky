@@ -62,11 +62,11 @@ vet:
 deps:
 	-cd ${BUILD_DIR} ; \
   glide install ; \
-	curl -L -o go-multiaddr-master.zip https://github.com/multiformats/go-multiaddr/archive/master.zip ; \
-	unzip -o go-multiaddr-master.zip ; \
-	rm -rf ./vendor/github.com/multiformats/go-multiaddr ; \
-	mv go-multiaddr-master ./vendor/github.com/multiformats/go-multiaddr ; \
-	rm go-multiaddr-master.zip ; \
+	#curl -L -o go-multiaddr-master.zip https://github.com/multiformats/go-multiaddr/archive/master.zip ; \
+	#unzip -o go-multiaddr-master.zip ; \
+	#rm -rf ./vendor/github.com/multiformats/go-multiaddr ; \
+	#mv go-multiaddr-master ./vendor/github.com/multiformats/go-multiaddr ; \
+	#rm go-multiaddr-master.zip ; 
 	cd - >/dev/null
 
 fmt:

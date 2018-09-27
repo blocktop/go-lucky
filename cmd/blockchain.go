@@ -123,7 +123,7 @@ more than once`)
 	viper.BindPFlag("node.port", flags.Lookup("p2pport"))
 	viper.BindPFlag("node.bootstrapper.peers", flags.Lookup("bootstrapPeer"))
 	viper.BindPFlag("node.bootstrapper.disable", flags.Lookup("nobootstrap"))
-	viper.BindPFlag("blockchain.dataDir", flags.Lookup("dataDir"))
+	viper.BindPFlag("store.dataDir", flags.Lookup("dataDir"))
 	viper.BindPFlag("blockchain.genesis", flags.Lookup("genesis"))
 	viper.BindPFlag("blockchain.metrics.trackall", flags.Lookup("trackall"))
 	viper.BindPFlag("diagnostics.cpuprofile", flags.Lookup("cpuprofile"))
@@ -146,6 +146,13 @@ more than once`)
 	viper.SetDefault("node.addresses", []string{"/ip4/0.0.0.0/tcp/29190", "/ip6/::/tcp/29190"})
 	viper.SetDefault("node.discovery.disable", false)
 	viper.SetDefault("node.discovery.interval", 5) // second
+	viper.SetDefault("store.ipfs.apiport", 5001)
+	viper.SetDefault("store.ipfs.gatewayport", 8081)
+	viper.SetDefault("store.ipfs.swarmport", 4001)
+	viper.SetDefault("store.ipfs.swarmhosts", []string{"/ip4/0.0.0.0/tcp", "/ip6/::/tcp"})
+	viper.SetDefault("store.ipfs.bootstraplist", []string{}) //TODO
+	viper.SetDefault("store.ipfs.pin", false)
+	viper.SetDefault("store.ipfs.disablenat", false)
 }
 
 func buildConsensus() spec.Consensus {

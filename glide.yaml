@@ -23,3 +23,4 @@ import:
 - package: github.com/spf13/viper
   version: v1.2.0
 - package: github.com/multiformats/go-multiaddr
+  version: v1.3.0
