@@ -132,10 +132,12 @@ more than once`)
 	viper.SetDefault("blockchain.genesis", false)
 	viper.SetDefault("blockchain.blockInterval", 3*time.Second)
 	viper.SetDefault("blockchain.type", "luckychain")
-	viper.SetDefault("blockchain.block.type", "luckyblock")
+	viper.SetDefault("blockchain.block.name", "luckyblock")
+	viper.SetDefault("blockchain.block.namespace", "io.blocktop.lucky")
 	viper.SetDefault("blockchain.block.version", "v1")
 	viper.SetDefault("blockchain.consensus.depth", 10)
 	viper.SetDefault("blockchain.consensus.depthBuffer", 2)
+	viper.SetDefault("blockchain.receiveconcurrency", 2)
 
 	viper.SetDefault("node.bootstrapper.disable", false)
 	viper.SetDefault("node.bootstrapper.checkInterval", 5)         // seconds
@@ -146,6 +148,7 @@ more than once`)
 	viper.SetDefault("node.addresses", []string{"/ip4/0.0.0.0/tcp/29190", "/ip6/::/tcp/29190"})
 	viper.SetDefault("node.discovery.disable", false)
 	viper.SetDefault("node.discovery.interval", 5) // second
+	viper.SetDefault("node.broadcastconcurrency", 4)
 	viper.SetDefault("store.ipfs.apiport", 5001)
 	viper.SetDefault("store.ipfs.gatewayport", 8081)
 	viper.SetDefault("store.ipfs.swarmport", 4001)
@@ -157,7 +160,7 @@ more than once`)
 
 func buildConsensus() spec.Consensus {
 	blockComparator := luckyblock.BlockComparator
-	consensus := consensus.New(10, blockComparator)
+	consensus := consensus.NewConsensus(blockComparator)
 
 	return consensus
 }
@@ -165,8 +168,8 @@ func buildConsensus() spec.Consensus {
 func buildController(node spec.NetworkNode, consensus spec.Consensus) spec.Controller {
 	controller := ctrl.NewController(node)
 
-	blockGenerator := luckyblock.NewBlockGenerator(node.GetPeerID())
-	bc := blockchain.NewBlockchain(blockGenerator, consensus, node.GetPeerID())
+	blockGenerator := luckyblock.NewBlockGenerator(node.PeerID())
+	bc := blockchain.NewBlockchain(blockGenerator, consensus, node.PeerID())
 
 	controller.AddBlockchain(bc)
 
@@ -194,7 +197,7 @@ func buildNode() *p2p.NetworkNode {
 		failWithError(err)
 	}
 
-	hostAddr, _ := ma.NewMultiaddr(fmt.Sprintf("/ipfs/%s", node.GetPeerID()))
+	hostAddr, _ := ma.NewMultiaddr(fmt.Sprintf("/ipfs/%s", node.PeerID()))
 	addr := node.Host.Addrs()[0]
 	fullAddr := addr.Encapsulate(hostAddr)
 	fmt.Fprintf(os.Stderr, "P2P address: %s\n", fullAddr)

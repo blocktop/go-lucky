@@ -65,6 +65,7 @@ func init() {
 	viper.BindPFlag("rpc.port", rootCmd.PersistentFlags().Lookup("rpcport"))
 	viper.SetDefault("rpc.port", 28180)
 
+	//flag.Set("v", "1")
 	flag.Parse()
 }
 
