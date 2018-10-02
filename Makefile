@@ -61,7 +61,10 @@ vet:
 
 deps:
 	-cd ${BUILD_DIR} ; \
+	go get -u github.com/whyrusleeping/gx ; \
+	curl https://glide.sh/get | sh ; \
   glide install ; \
+	gx install ; \
 	#curl -L -o go-multiaddr-master.zip https://github.com/multiformats/go-multiaddr/archive/master.zip ; \
 	#unzip -o go-multiaddr-master.zip ; \
 	#rm -rf ./vendor/github.com/multiformats/go-multiaddr ; \

@@ -1,0 +1,40 @@
+{
+  "author": "jason",
+  "bugs": {},
+  "gx": {
+    "dvcsimport": "github.com/blocktop/go-lucky"
+  },
+  "gxVersion": "0.12.1",
+  "gxDependencies": [
+    {
+      "author": "magik6k",
+      "hash": "QmYVqYJTVjetcf1guieEgWpK1PZtHPytP624vKzTF1P3r2",
+      "name": "go-ipfs-config",
+      "version": "0.2.8"
+    },
+    {
+      "author": "whyrusleeping",
+      "hash": "QmPSQnBKM9g7BaUcZCvswUJVscQ1ipjmwxN5PXCjkp9EQ7",
+      "name": "go-cid",
+      "version": "0.9.0"
+    },
+    {
+      "author": "multiformats",
+      "hash": "QmPnFwZ2JXKnXgMw8CdBPxn7FWh6LLdjUjxV1fKHuJnkr8",
+      "name": "go-multihash",
+      "version": "1.0.8"
+    },
+    {
+      "author": "whyrusleeping",
+      "hash": "QmPrv66vmh2P7vLJMpYx6DWLTNKvVB4Jdkyxs6V3QvWKvf",
+      "name": "go-ipld-cbor",
+      "version": "1.3.0"
+    }
+  ],
+  "language": "go",
+  "license": "",
+  "name": "go-lucky",
+  "releaseCmd": "git commit -a -m \"gx publish $VERSION\"",
+  "version": "0.0.0"
+}
+

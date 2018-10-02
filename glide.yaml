@@ -1,4 +1,4 @@
-package: github.com/blocktop/go-lucky-cli
+package: github.com/blocktop/go-lucky
 import:
 - package: github.com/blocktop/go-blockchain
 - package: github.com/blocktop/go-consensus
