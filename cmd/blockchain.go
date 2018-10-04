@@ -136,7 +136,7 @@ more than once`)
 	viper.SetDefault("blockchain.block.namespace", "io.blocktop.lucky")
 	viper.SetDefault("blockchain.block.version", "v1")
 	viper.SetDefault("blockchain.consensus.depth", 100)
-	viper.SetDefault("blockchain.consensus.depthBuffer", 10)
+	viper.SetDefault("blockchain.consensus.buffer", 10)
 	viper.SetDefault("blockchain.receiveconcurrency", 2)
 
 	viper.SetDefault("node.bootstrapper.disable", false)
