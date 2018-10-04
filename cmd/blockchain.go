@@ -143,7 +143,10 @@ more than once`)
 	viper.SetDefault("node.bootstrapper.checkInterval", 5)         // seconds
 	viper.SetDefault("node.bootstrapper.rebootstrapInterval", 300) // seconds
 	viper.SetDefault("node.bootstrapper.minPeers", 1)
-	viper.SetDefault("node.bootstrapper.peers", []string{})
+	viper.SetDefault("node.bootstrapper.peers", []string{
+		"/ip4/104.196.155.69/tcp/29190/ipfs/QmTTDpNa8ErE23Fs3YZFLnprv6UaXTWFsm11Tt2zcWgKBJ",
+    "/ip4/35.204.208.27/tcp/29190/ipfs/QmdKoGtMGzeqeZ9M1zt4zE5YsRRdH3h2b6oPKW9pmvb3Xc",
+    "/ip4/35.200.229.227/tcp/29190/ipfs/QmUCx8w8YjnhMLARdjHfTjf4S1DMqB5PhW2CUGHcDeMD4S"})
 	viper.SetDefault("node.port", 29190)
 	viper.SetDefault("node.addresses", []string{"/ip4/0.0.0.0/tcp/29190", "/ip6/::/tcp/29190"})
 	viper.SetDefault("node.discovery.disable", false)
