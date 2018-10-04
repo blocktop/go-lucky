@@ -17,11 +17,11 @@
 package cmd
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"path"
 
+	glogcobra "github.com/blocktop/go-glog-cobra"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -65,8 +65,7 @@ func init() {
 	viper.BindPFlag("rpc.port", rootCmd.PersistentFlags().Lookup("rpcport"))
 	viper.SetDefault("rpc.port", 28180)
 
-	//flag.Set("v", "1")
-	flag.Parse()
+	glogcobra.Init(rootCmd)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -87,6 +86,15 @@ func initConfig() {
 	}
 
 	viper.SetEnvPrefix("LUCKY_")
+
+	// make sure we are logging something to stderr
+	flags := rootCmd.PersistentFlags()
+	if b, _ := flags.GetBool(glogcobra.LogToStdErr); !b {
+		if b, _ = flags.GetBool(glogcobra.AlsoLogToStdErr); !b {
+			flags.Set(glogcobra.AlsoLogToStdErr, "true")
+		}
+	}
+	glogcobra.Parse(rootCmd)
 }
 
 func getHomeDir() string {

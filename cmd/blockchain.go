@@ -19,7 +19,6 @@ package cmd
 import (
 	"context"
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"os/signal"
@@ -37,7 +36,8 @@ import (
 	luckyblock "github.com/blocktop/go-luckyblock"
 	p2p "github.com/blocktop/go-network-libp2p"
 	rpc "github.com/blocktop/go-rpc-server"
-	"github.com/blocktop/go-spec"
+	spec "github.com/blocktop/go-spec"
+
 	"github.com/golang/glog"
 	ma "github.com/multiformats/go-multiaddr"
 	"github.com/spf13/cobra"
@@ -53,15 +53,12 @@ var blockchainCmd = &cobra.Command{
 		defer glog.Flush()
 
 		if !fileExists(viper.ConfigFileUsed()) {
-			failWithError(errors.New("Config file not found. Use the init command to create it."))
+			failWithError(errors.New("config file not found. Use the init command to create it"))
 		}
 
 		node := buildNode()
 		consensus := buildConsensus()
 		controller := buildController(node, consensus)
-
-		// TODO temp
-		flag.Set("logtostderr", "true")
 
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
@@ -106,7 +103,7 @@ func init() {
 
 	homeDir := getHomeDir()
 
-	flags := blockchainCmd.PersistentFlags()
+	flags := blockchainCmd.Flags()
 	flags.IntP("p2pport", "p", 29190, "port for P2P network listener")
 	flags.String("dataDir", "", "directory for blockchain database")
 	flags.BoolP("genesis", "g", false, "produce the genesis block")
@@ -130,13 +127,13 @@ more than once`)
 
 	viper.SetDefault("blockchain.dataDir", path.Join(homeDir, ".lucky", "data"))
 	viper.SetDefault("blockchain.genesis", false)
-	viper.SetDefault("blockchain.blockInterval", 500*time.Millisecond)
+	viper.SetDefault("blockchain.blockInterval", time.Second)
 	viper.SetDefault("blockchain.type", "luckychain")
 	viper.SetDefault("blockchain.block.name", "luckyblock")
 	viper.SetDefault("blockchain.block.namespace", "io.blocktop.lucky")
 	viper.SetDefault("blockchain.block.version", "v1")
-	viper.SetDefault("blockchain.consensus.depth", 50)
-	viper.SetDefault("blockchain.consensus.buffer", 5)
+	viper.SetDefault("blockchain.consensus.depth", 30)
+	viper.SetDefault("blockchain.consensus.buffer", 4)
 	viper.SetDefault("blockchain.receiveconcurrency", 2)
 
 	viper.SetDefault("node.bootstrapper.disable", false)
@@ -145,8 +142,8 @@ more than once`)
 	viper.SetDefault("node.bootstrapper.minPeers", 1)
 	viper.SetDefault("node.bootstrapper.peers", []string{
 		"/ip4/104.196.155.69/tcp/29190/ipfs/QmTTDpNa8ErE23Fs3YZFLnprv6UaXTWFsm11Tt2zcWgKBJ",
-    "/ip4/35.204.208.27/tcp/29190/ipfs/QmdKoGtMGzeqeZ9M1zt4zE5YsRRdH3h2b6oPKW9pmvb3Xc",
-    "/ip4/35.200.229.227/tcp/29190/ipfs/QmUCx8w8YjnhMLARdjHfTjf4S1DMqB5PhW2CUGHcDeMD4S"})
+		"/ip4/35.204.208.27/tcp/29190/ipfs/QmdKoGtMGzeqeZ9M1zt4zE5YsRRdH3h2b6oPKW9pmvb3Xc",
+		"/ip4/35.200.229.227/tcp/29190/ipfs/QmUCx8w8YjnhMLARdjHfTjf4S1DMqB5PhW2CUGHcDeMD4S"})
 	viper.SetDefault("node.port", 29190)
 	viper.SetDefault("node.addresses", []string{"/ip4/0.0.0.0/tcp/29190", "/ip6/::/tcp/29190"})
 	viper.SetDefault("node.discovery.disable", false)
