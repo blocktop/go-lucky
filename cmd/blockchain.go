@@ -130,7 +130,7 @@ more than once`)
 
 	viper.SetDefault("blockchain.dataDir", path.Join(homeDir, ".lucky", "data"))
 	viper.SetDefault("blockchain.genesis", false)
-	viper.SetDefault("blockchain.blockInterval", 200*time.Millisecond)
+	viper.SetDefault("blockchain.blockInterval", 500*time.Millisecond)
 	viper.SetDefault("blockchain.type", "luckychain")
 	viper.SetDefault("blockchain.block.name", "luckyblock")
 	viper.SetDefault("blockchain.block.namespace", "io.blocktop.lucky")
