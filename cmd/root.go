@@ -76,6 +76,7 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		// Search config in home directory with name ".lucky" (without extension).
+		homeDir = getHomeDir()
 		viper.AddConfigPath(path.Join(homeDir, ".lucky"))
 		viper.SetConfigName("config")
 	}
