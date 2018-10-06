@@ -4,13 +4,12 @@
   "gx": {
     "dvcsimport": "github.com/blocktop/go-lucky"
   },
-  "gxVersion": "0.12.1",
   "gxDependencies": [
     {
       "author": "magik6k",
-      "hash": "QmVBUpxsHh53rNcufqxMpLAmz37eGyLJUaexDy1W9YkiNk",
+      "hash": "QmSoYrBMibm2T3LupaLuez7LPGnyrJwdRxvTfPUyCp691u",
       "name": "go-ipfs-config",
-      "version": "0.2.8"
+      "version": "0.2.13"
     },
     {
       "author": "whyrusleeping",
@@ -31,6 +30,7 @@
       "version": "1.3.0"
     }
   ],
+  "gxVersion": "0.12.1",
   "language": "go",
   "license": "",
   "name": "go-lucky",
