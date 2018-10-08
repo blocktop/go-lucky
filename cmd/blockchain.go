@@ -30,9 +30,10 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/blocktop/go-kernel"
+
 	blockchain "github.com/blocktop/go-blockchain"
 	consensus "github.com/blocktop/go-consensus"
-	ctrl "github.com/blocktop/go-controller"
 	luckyblock "github.com/blocktop/go-luckyblock"
 	p2p "github.com/blocktop/go-network-libp2p"
 	rpc "github.com/blocktop/go-rpc-server"
@@ -57,8 +58,22 @@ var blockchainCmd = &cobra.Command{
 		}
 
 		node := buildNode()
-		consensus := buildConsensus()
-		controller := buildController(node, consensus)
+		cons := buildConsensus()
+		bg := buildBlockGenerator()
+		bc := buildBlockchain(cons, bg)
+
+		cfg := &kernel.KernelConfig{
+			BlockchainName:       bc.Name(),
+			BlockFrequency:       viper.GetFloat64("blockchain.blockFrequency"),
+			BlockConfirmer:       cons.ConfirmBlocks,
+			CompetitionEvaluator: cons.Evaluate,
+			BlockGenerator:       bc.GenerateBlock,
+			GenesisGenerator:     bc.GenerateGenesis,
+			BlockPrototype:       bg.BlockPrototype(),
+			NetworkNode:          node,
+			BlockAdder:           bc.AddBlocks}
+
+		kernel.Init(cfg)
 
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
@@ -80,8 +95,9 @@ var blockchainCmd = &cobra.Command{
 		}
 
 		node.Listen(ctx)
-		controller.Start(ctx)
+		bc.Start(ctx)
 		rpc.Start()
+		kernel.Start(ctx)
 
 		sig := make(chan os.Signal, 1)
 		signal.Notify(sig,
@@ -91,7 +107,8 @@ var blockchainCmd = &cobra.Command{
 
 		<-sig
 
-		controller.Stop()
+		kernel.Stop()
+		bc.Stop()
 		node.Close()
 	},
 }
@@ -113,7 +130,8 @@ more than once`)
 	flags.Bool("nodiscovery", false, "disable peer discovery")
 	flags.Bool("trackall", false, `include immediately disqualified blocks in consensus metrics`)
 	flags.String("cpuprofile", "", "output file for CPU profile info")
-
+	flags.Float64P("blockFrequency", "f", 1.0, "Number of blocks per second. Can be a decimal number.")
+	flags.DurationP("consensusTime", "t", 30*time.Second, "The duration blocks are tracked before consensus is reached.")
 	viper.BindEnv("blockchain.dataDir", "LUCKY_DATA_DIR")
 	viper.BindEnv("node.port", "LUCKY_P2P_PORT")
 
@@ -123,17 +141,18 @@ more than once`)
 	viper.BindPFlag("store.dataDir", flags.Lookup("dataDir"))
 	viper.BindPFlag("blockchain.genesis", flags.Lookup("genesis"))
 	viper.BindPFlag("blockchain.metrics.trackall", flags.Lookup("trackall"))
+	viper.BindPFlag("blockchain.blockFrequency", flags.Lookup("blockFrequency"))
+	viper.BindPFlag("blockchain.consensus.time", flags.Lookup("consensusTime"))
 	viper.BindPFlag("diagnostics.cpuprofile", flags.Lookup("cpuprofile"))
 
 	viper.SetDefault("blockchain.dataDir", path.Join(homeDir, ".lucky", "data"))
 	viper.SetDefault("blockchain.genesis", false)
-	viper.SetDefault("blockchain.blockInterval", time.Second)
-	viper.SetDefault("blockchain.type", "luckychain")
+	viper.SetDefault("blockchain.blockFrequency", float64(1)) // blocks/second
+	viper.SetDefault("blockchain.name", "luckychain")
 	viper.SetDefault("blockchain.block.name", "luckyblock")
 	viper.SetDefault("blockchain.block.namespace", "io.blocktop.lucky")
 	viper.SetDefault("blockchain.block.version", "v1")
-	viper.SetDefault("blockchain.consensus.depth", 30)
-	viper.SetDefault("blockchain.consensus.buffer", 4)
+	viper.SetDefault("blockchain.consensus.time", 30*time.Second)
 	viper.SetDefault("blockchain.receiveconcurrency", 2)
 
 	viper.SetDefault("node.bootstrapper.disable", false)
@@ -165,15 +184,14 @@ func buildConsensus() spec.Consensus {
 	return consensus
 }
 
-func buildController(node spec.NetworkNode, consensus spec.Consensus) spec.Controller {
-	controller := ctrl.NewController(node)
+func buildBlockGenerator() spec.BlockGenerator {
+	blockGenerator := luckyblock.NewBlockGenerator()
+	return blockGenerator
+}
 
-	blockGenerator := luckyblock.NewBlockGenerator(node.PeerID())
-	bc := blockchain.NewBlockchain(blockGenerator, consensus, node.PeerID())
-
-	controller.AddBlockchain(bc)
-
-	return controller
+func buildBlockchain(cons spec.Consensus, bg spec.BlockGenerator) spec.Blockchain {
+	bc := blockchain.NewBlockchain(bg, cons)
+	return bc
 }
 
 func buildNode() *p2p.NetworkNode {
