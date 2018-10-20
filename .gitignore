@@ -5,3 +5,4 @@ lucky-darwin-amd64
 lucky-windows-amd64
 lucky-lindux-amd64
 go-lucky
+Makefile

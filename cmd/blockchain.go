@@ -63,15 +63,11 @@ var blockchainCmd = &cobra.Command{
 		bc := buildBlockchain(cons, bg)
 
 		cfg := &kernel.KernelConfig{
-			BlockchainName:       bc.Name(),
-			BlockFrequency:       viper.GetFloat64("blockchain.blockFrequency"),
-			BlockConfirmer:       cons.ConfirmBlocks,
-			CompetitionEvaluator: cons.Evaluate,
-			BlockGenerator:       bc.GenerateBlock,
-			GenesisGenerator:     bc.GenerateGenesis,
-			BlockPrototype:       bg.BlockPrototype(),
-			NetworkNode:          node,
-			BlockAdder:           bc.AddBlocks}
+			Blockchain:     bc,
+			Consensus:      cons,
+			BlockFrequency: viper.GetFloat64("blockchain.blockFrequency"),
+			BlockPrototype: bg.BlockPrototype(),
+			NetworkNode:    node}
 
 		kernel.Init(cfg)
 
@@ -179,9 +175,9 @@ more than once`)
 
 func buildConsensus() spec.Consensus {
 	blockComparator := luckyblock.BlockComparator
-	consensus := consensus.NewConsensus(blockComparator)
+	cons := consensus.NewConsensus(blockComparator)
 
-	return consensus
+	return cons
 }
 
 func buildBlockGenerator() spec.BlockGenerator {
